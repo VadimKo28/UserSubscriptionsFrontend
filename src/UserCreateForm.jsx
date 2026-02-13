@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const INITIAL_STATE = {
   name: "",
@@ -7,6 +8,7 @@ const INITIAL_STATE = {
 };
 
 export function UserCreateForm() {
+  const navigate = useNavigate();
   const [form, setForm] = useState(INITIAL_STATE);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -29,6 +31,7 @@ export function UserCreateForm() {
         headers: {
           "Content-Type": "application/json"
         },
+        credentials: "include", // Важно для отправки cookies
         body: JSON.stringify({
           name: form.name,
           email: form.email,
@@ -45,8 +48,12 @@ export function UserCreateForm() {
         throw new Error(message);
       }
 
-      setSuccess("Пользователь успешно создан");
-      setForm(INITIAL_STATE);
+      // Backend пишет access_token и refresh_token в cookies (HttpOnly)
+      // Браузер автоматически отправит эти cookies с последующими запросами при credentials: "include"
+      // Небольшая задержка перед редиректом, чтобы cookie успела установиться
+      setTimeout(() => {
+        navigate(`/users/${data.user_id}`);
+      }, 100);
     } catch (err) {
       setError(err.message || "Неизвестная ошибка");
     } finally {
