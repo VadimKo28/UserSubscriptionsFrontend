@@ -27,7 +27,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            sudo rm -rf /var/www/user-subscriptions-frontend/*
+            rm -rf /var/www/user-subscriptions-frontend/*
 
       - name: Upload dist to VPS
         uses: appleboy/scp-action@v0.1.7
