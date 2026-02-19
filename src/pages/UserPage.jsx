@@ -77,7 +77,7 @@ function SubscriptionCreateForm({ userId, onSuccess }) {
       setStartDate("");
       setEndDate("");
       
-      // Перезагружаем список подписок
+      // Перезагружаем список подписок и закрываем форму
       if (onSuccess) {
         setTimeout(() => {
           onSuccess();
@@ -158,6 +158,7 @@ export function UserPage() {
   const [loading, setLoading] = useState(true);
   const [subscriptionsLoading, setSubscriptionsLoading] = useState(true);
   const [error, setError] = useState("");
+  const [showForm, setShowForm] = useState(false);
   
   // Функция для загрузки подписок
   const loadSubscriptions = useCallback(() => {
@@ -286,9 +287,26 @@ export function UserPage() {
       </dl>
 
       <div className="subscriptions-section">
-        <h3>Подписки</h3>
+        <div className="subscriptions-header">
+          <h3>Подписки</h3>
+          <button
+            type="button"
+            onClick={() => setShowForm(!showForm)}
+            className="toggle-form-button"
+          >
+            {showForm ? "Скрыть форму" : "Добавить подписку"}
+          </button>
+        </div>
         
-        <SubscriptionCreateForm userId={id} onSuccess={loadSubscriptions} />
+        {showForm && (
+          <SubscriptionCreateForm 
+            userId={id} 
+            onSuccess={() => {
+              loadSubscriptions();
+              setShowForm(false);
+            }} 
+          />
+        )}
         
         {subscriptionsLoading ? (
           <div>Загрузка подписок...</div>
