@@ -26,7 +26,7 @@ export function UserCreateForm() {
     setLoading(true);
 
     try {
-      const response = await fetch("/users/sign-up", {
+      const response = await fetch("/api/users/sign-up", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
